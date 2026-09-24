@@ -1,20 +1,20 @@
 # Product Management Dashboard
 
-A production-minded product management dashboard built with Next.js, React, TypeScript, Tailwind CSS, and the DummyJSON Products API.
+A production-minded product management dashboard built with **Next.js, React, TypeScript, Tailwind CSS, and the DummyJSON Products API**.
 
-The application allows users to browse, search, filter, sort, paginate, view, and update products through a responsive dashboard interface.
+The application provides a responsive interface for browsing, searching, filtering, sorting, paginating, viewing, and updating products.
 
 ## Features
 
 * Dashboard summary metrics
 * Product catalogue
-* Product search with debouncing
+* Debounced product search
 * Category filtering
 * Product sorting
 * API-based pagination
-* URL-based search/filter/sort/page state
+* URL-based search, filter, sort, and pagination state
 * Product details page
-* Edit product price and stock
+* Product price and stock editing
 * PATCH API integration
 * Loading states
 * Error states
@@ -67,7 +67,7 @@ npm run lint
 
 ## Architecture
 
-The application uses the Next.js App Router and separates server-side data fetching from interactive client-side components.
+The application uses the **Next.js App Router** and intentionally separates server-side data fetching from interactive client-side functionality.
 
 ### Server Components
 
@@ -89,7 +89,7 @@ Interactive functionality is isolated into Client Components:
 * `Pagination`
 * `ProductEditForm`
 
-These components handle browser interactions such as input changes, URL navigation, and form submission.
+These components handle browser interactions such as input changes, URL navigation, local form state, and form submission.
 
 ### API Layer
 
@@ -127,15 +127,15 @@ Search, category, sorting, and pagination state are stored in URL query paramete
 Example:
 
 ```text
-/?search=phone&category=beauty&sort=price&order=desc&page=2
+/?search=phone&sort=price&order=desc&page=2
 ```
 
-This makes filtered views:
+This makes catalogue views:
 
 * Shareable
 * Bookmarkable
 * Preserved during navigation
-* Compatible with browser back/forward navigation
+* Represented directly in the browser URL
 
 When search, category, or sorting changes, pagination is reset to page 1.
 
@@ -168,7 +168,7 @@ The form includes:
 * Success feedback
 * Error feedback
 
-DummyJSON simulates update responses, so changes are not intended to provide permanent persistence in a real database.
+DummyJSON is a mock API and simulates product update responses, so changes are not permanently persisted on the server.
 
 ## Loading and Error Handling
 
@@ -178,9 +178,9 @@ The application includes intentional states for:
 * Product details loading
 * API errors
 * Empty search results
-* Invalid/non-existent products
+* Invalid or non-existent products
 
-This prevents the interface from appearing broken while data is loading or unavailable.
+These states prevent the interface from appearing broken while data is loading or unavailable.
 
 ## Responsive Design
 
@@ -195,7 +195,7 @@ Accessibility considerations include:
 * Semantic HTML
 * Form labels
 * Accessible navigation labels
-* Button disabled states
+* Disabled states for unavailable actions
 * `role="alert"` for errors
 * `role="status"` and live feedback for successful updates
 * Descriptive image alt text
@@ -215,19 +215,17 @@ Search, filtering, sorting, and pagination are stored in the URL instead of intr
 
 This keeps the application simpler while making the current catalogue view shareable and navigable.
 
-### Pagination
+### API pagination
 
 The application uses the API's `limit` and `skip` parameters rather than downloading the entire catalogue and paginating locally.
 
-This better represents how a larger production application would handle a growing dataset.
+This better represents how a larger production application could handle a growing dataset.
 
 ### No global state library
 
 A state management library was not introduced because the application's interactive state is relatively small and localized.
 
 Adding one would increase complexity without providing significant value for the current requirements.
-
-## Limitations
 
 ## Limitations
 
@@ -240,24 +238,22 @@ Adding one would increase complexity without providing significant value for the
 
 If this application were developed further, potential improvements would include:
 
-* Persistent backend/database
-* Authentication and role-based access
-* Optimistic product updates
-* Automated tests
-* More advanced pagination
-* Server-side caching strategy
+* Persistent backend/database integration
+* Authentication and role-based access control
+* Optimistic updates with rollback handling
+* Automated unit, integration, and end-to-end tests
+* Improved pagination controls for very large datasets
+* A more advanced server-side caching and revalidation strategy
 * Product image gallery on the details page
 * Audit history for product changes
 * Toast notification system
 * More detailed inventory analytics
-
 
 ## AI Assistance
 
 AI tools were used during development for implementation guidance, debugging, architecture discussion, code review, and documentation drafting.
 
 All generated suggestions were reviewed, adapted to the project requirements, and tested through the application's user flows, linting, and production build process.
-
 
 ## Project Structure
 
@@ -288,4 +284,22 @@ lib/
 
 types/
 └── product.ts
+
+public/
+
+next.config.ts
+package.json
+README.md
+tsconfig.json
 ```
+
+## Verification
+
+The project has been verified with:
+
+```bash
+npm run lint
+npm run build
+```
+
+Both commands complete successfully.

@@ -60,9 +60,7 @@ export default async function ProductDetailsPage({
     backParams.set("page", filters.page);
   }
 
-  const backUrl = backParams.toString()
-    ? `/?${backParams.toString()}`
-    : "/";
+  const backUrl = backParams.toString() ? `/?${backParams.toString()}` : "/";
 
   return (
     <main className="min-h-screen bg-gray-50 p-6 md:p-8">
@@ -138,22 +136,18 @@ export default async function ProductDetailsPage({
               </div>
 
               <div className="mt-8">
-                <p className="text-sm text-gray-500">
-                  Product ID
-                </p>
+                <p className="text-sm text-gray-500">Product ID</p>
 
-                <p className="mt-1 font-medium text-gray-900">
-                  #{product.id}
-                </p>
+                <p className="mt-1 font-medium text-gray-900">#{product.id}</p>
               </div>
             </div>
           </div>
         </div>
         <ProductEditForm
-  productId={product.id}
-  initialPrice={product.price}
-  initialStock={product.stock}
-/>
+          productId={product.id}
+          initialPrice={product.price}
+          initialStock={product.stock}
+        />
       </div>
     </main>
   );
