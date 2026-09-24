@@ -32,6 +32,57 @@ export async function getProducts({
   sortBy,
   order = "asc",
 }: GetProductsParams = {}): Promise<ProductsResponse> {
+  if (search && category) {
+    const searchParams = new URLSearchParams();
+
+    searchParams.set("q", search);
+    searchParams.set("limit", "0");
+
+    const response = await fetch(
+      `${API_BASE_URL}/products/search?${searchParams.toString()}`,
+      {
+        next: {
+          revalidate: 60,
+        },
+      },
+    );
+
+    const data = await handleResponse<ProductsResponse>(response);
+
+    let filteredProducts = data.products.filter(
+      (product) => product.category === category,
+    );
+
+    if (sortBy) {
+      filteredProducts = [...filteredProducts].sort((a, b) => {
+        const aValue = a[sortBy as keyof Product];
+        const bValue = b[sortBy as keyof Product];
+
+        if (typeof aValue === "string" && typeof bValue === "string") {
+          return order === "asc"
+            ? aValue.localeCompare(bValue)
+            : bValue.localeCompare(aValue);
+        }
+
+        if (typeof aValue === "number" && typeof bValue === "number") {
+          return order === "asc" ? aValue - bValue : bValue - aValue;
+        }
+
+        return 0;
+      });
+    }
+
+    const total = filteredProducts.length;
+    const products = filteredProducts.slice(skip, skip + limit);
+
+    return {
+      products,
+      total,
+      skip,
+      limit,
+    };
+  }
+
   let endpoint = `${API_BASE_URL}/products`;
 
   if (search) {
@@ -62,13 +113,8 @@ export async function getProducts({
     },
   });
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch products");
-  }
-
-  return response.json();
+  return handleResponse<ProductsResponse>(response);
 }
-
 export async function getProductById(id: number): Promise<Product> {
   const response = await fetch(`${API_BASE_URL}/products/${id}`, {
     next: {
